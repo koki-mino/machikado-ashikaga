@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://koki-mino.github.io/machikado-ashikaga/sitemap.xml

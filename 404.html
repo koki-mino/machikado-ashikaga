@@ -1,0 +1,20 @@
+<!doctype html>
+<html lang="ja"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>ページが見つかりません｜まちかど足利</title><meta name="robots" content="noindex,follow"><meta name="theme-color" content="#254d3b">
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='3' fill='%23254d3b'/%3E%3Cpath d='M7 20V7h13M12 25h13V12' stroke='%23fffefa' stroke-width='3' fill='none'/%3E%3C/svg%3E">
+<style>*{box-sizing:border-box}body{margin:0;background:#f8f6ef;color:#23332c;font-family:-apple-system,BlinkMacSystemFont,'Yu Gothic',Meiryo,sans-serif;line-height:1.85;overflow-wrap:anywhere}main{max-width:760px;margin:9vh auto;padding:2rem 1.25rem}.brand{font-family:'Yu Mincho',serif;font-size:1.5rem;font-weight:700;text-decoration:none}.code{font-size:5rem;line-height:1.3;margin:2rem 0 0;color:#254d3b;font-family:serif}h1{font-family:'Yu Mincho',serif;font-size:clamp(1.6rem,5vw,2.2rem);line-height:1.6}p{color:#5b635d}nav{display:flex;flex-wrap:wrap;gap:1rem;margin-block:2rem}.button{display:inline-flex;align-items:center;min-height:48px;padding:.7rem 1.2rem;border:1px solid #254d3b;background:#254d3b;color:white;text-decoration:none}.secondary{background:transparent;color:#254d3b}a:focus-visible{outline:3px solid #9a482b;outline-offset:4px}footer{border-top:1px solid #c8cec3;font-size:.8125rem;padding-top:1.5rem}</style>
+</head><body><main><a class="brand" data-home href="index.html">まちかど足利</a><p class="code" aria-hidden="true">404</p><h1>ページが見つかりません</h1><p>URLが変わったか、ページが移動した可能性があります。<br>ホームや記事一覧から、もう一度探してみてください。</p><nav aria-label="ページを探す"><a class="button" data-home href="index.html">ホームへ戻る</a><a class="button secondary" data-archive href="archive.html">記事一覧から探す</a><a class="button secondary" href="https://note.com/joyous_daisy1459">noteで読む</a></nav><footer><p>まちかど足利は個人運営の地域メディアです。足利市の公式サイトではありません。</p></footer></main>
+<script>
+(() => {
+  const configuredSiteUrl = "https://koki-mino.github.io/machikado-ashikaga/";
+  const configured = new URL(configuredSiteUrl);
+  let base;
+  if (location.protocol === "file:") base = new URL("./", location.href);
+  else if (location.origin === configured.origin && location.pathname.startsWith(configured.pathname)) base = configured;
+  else if (location.hostname.endsWith(".github.io")) {
+    const first = location.pathname.split("/").filter(Boolean)[0] || "";
+    base = new URL(first && !first.includes(".") ? "/" + first + "/" : "/", location.origin);
+  } else base = new URL("/", location.origin);
+  document.querySelectorAll("[data-home]").forEach(a => a.href = new URL("index.html", base).href);
+  document.querySelectorAll("[data-archive]").forEach(a => a.href = new URL("archive.html", base).href);
+})();
+</script></body></html>

@@ -1,0 +1,87 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<!-- SEO:START -->
+<title>記事一覧・アーカイブ｜まちかど足利</title>
+<meta name="description" content="まちかど足利の全記事を、キーワードとテーマで検索できます。文化・歴史、お店、暮らし、まちの変化を、新しい順・古い順でたどる足利の記録です。">
+<link rel="canonical" href="https://koki-mino.github.io/machikado-ashikaga/archive.html">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="まちかど足利">
+<meta property="og:locale" content="ja_JP">
+<meta property="og:title" content="記事一覧・アーカイブ｜まちかど足利">
+<meta property="og:description" content="まちかど足利の全記事を、キーワードとテーマで検索できます。文化・歴史、お店、暮らし、まちの変化を、新しい順・古い順でたどる足利の記録です。">
+<meta property="og:url" content="https://koki-mino.github.io/machikado-ashikaga/archive.html">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="記事一覧・アーカイブ｜まちかど足利">
+<meta name="twitter:description" content="まちかど足利の全記事を、キーワードとテーマで検索できます。文化・歴史、お店、暮らし、まちの変化を、新しい順・古い順でたどる足利の記録です。">
+<!-- SEO:END -->
+<meta name="theme-color" content="#254d3b">
+<link rel="icon" href="assets/icons/favicon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="css/style.css">
+<script>document.documentElement.classList.add('js');</script>
+<script src="data/site-config.js" defer></script>
+<script src="data/articles.js" defer></script>
+<script src="js/main.js" defer></script>
+</head>
+<body>
+<a class="skip-link" href="#main">本文へ移動</a>
+<header class="site-header">
+  <div class="container header-inner">
+    <a class="brand" href="index.html"><span class="brand-mark" aria-hidden="true"></span><span>まちかど足利</span></a>
+    <button class="menu-toggle" type="button" aria-controls="site-navigation" aria-expanded="false">
+      <svg viewBox="0 0 20 20" fill="none" aria-hidden="true"><path d="M2 4h16M2 10h16M2 16h16" stroke="currentColor" stroke-width="1.5"/></svg>
+      <span class="menu-label">メニュー</span>
+    </button>
+    <nav class="site-nav" id="site-navigation" aria-label="メインメニュー">
+      <a href="index.html">ホーム</a>
+<a href="archive.html" aria-current="page">記事一覧</a>
+<a href="about.html">まちかど足利について</a>
+      <a class="nav-note" data-note-link href="https://note.com/joyous_daisy1459">noteで読む</a>
+    </nav>
+  </div>
+</header>
+<main id="main" tabindex="-1"><div class="container">
+  <header class="page-heading">
+    <nav class="breadcrumb" aria-label="パンくずリスト"><a href="index.html">ホーム</a><span aria-hidden="true">/</span><span aria-current="page">記事一覧</span></nav>
+    <p class="eyebrow">まちの記憶を、たどる</p>
+    <h1>記事一覧・アーカイブ</h1>
+    <p>気になる言葉やテーマから、足利の記録を探せます。各記事の本文はnoteでお読みいただけます。</p>
+  </header>
+  <form class="archive-form" id="archive-form" role="search" aria-label="記事を検索する" hidden>
+    <div class="filter-row">
+      <div class="field field-search"><label for="search">キーワード</label><input type="search" id="search" name="q" placeholder="例：花の湯、音楽、給食" aria-describedby="search-hint"></div>
+      <div class="field"><label for="category">テーマ</label><select id="category" name="category"><option value="">すべてのテーマ</option></select></div>
+      <div class="field"><label for="sort">並び順</label><select id="sort" name="sort"><option value="newest">新しい順</option><option value="oldest">古い順</option></select></div>
+    </div>
+    <p class="search-hint" id="search-hint">タイトル・概要・タグを検索します。複数の言葉はスペースで区切れます。</p>
+    <div class="filter-actions"><button class="button" type="submit">検索する</button><button class="button button-secondary" type="button" data-reset-filters>条件をクリア</button></div>
+  </form>
+  <noscript><div class="noscript-message">記事一覧の表示と検索にはJavaScriptが必要です。<a href="https://note.com/joyous_daisy1459">noteで全記事を読む</a>こともできます。
+<ul><li><a href="https://note.com/joyous_daisy1459/n/n28fa4ed22e21">足利市民文化賞2026と文化の担い手</a></li>
+<li><a href="https://note.com/joyous_daisy1459/n/naab38d5b6aec">足利「花の湯」が復活へ</a></li>
+<li><a href="https://note.com/joyous_daisy1459/n/nc1661222d1b8">学校給食の食材を子ども食堂へ</a></li></ul></div></noscript>
+  <section class="section" style="padding-top:0" aria-labelledby="archive-title">
+    <div class="archive-summary"><h2 id="archive-title">記事の記録</h2><p id="results-status" role="status" aria-live="polite" aria-atomic="true"></p></div>
+    <div class="articles-grid" id="archive-results"></div>
+    <div class="empty-state" id="empty-state" hidden><h3>該当する記事がありません</h3><p>言葉を短くするか、別のテーマで探してみてください。</p><button type="button" class="button button-secondary" data-reset-filters>すべての記事に戻す</button></div>
+  </section>
+</div></main>
+<footer class="site-footer">
+  <div class="container footer-inner">
+    <div>
+      <p class="footer-title">まちかど足利</p>
+      <p>足利のまちの、小さな変化を記録する。</p>
+      <p>個人運営の地域メディアです。足利市の公式サイトではありません。</p>
+      <p class="copyright">© まちかど足利</p>
+    </div>
+    <nav class="footer-links" aria-label="フッターメニュー">
+      <a href="index.html">ホーム</a><a href="archive.html">記事一覧</a>
+      <a href="about.html">このメディアについて</a>
+      <a data-note-link href="https://note.com/joyous_daisy1459">note</a>
+    </nav>
+  </div>
+</footer>
+</body>
+</html>
