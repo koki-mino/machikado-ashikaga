@@ -1,0 +1,93 @@
+<!doctype html>
+<html lang="ja"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="robots" content="noindex,nofollow"><title>公開URLの設定｜まちかど足利</title>
+<style>*{box-sizing:border-box}body{background:#f8f6ef;color:#23332c;font:16px/1.8 -apple-system,BlinkMacSystemFont,"Yu Gothic",Meiryo,sans-serif;margin:0;overflow-wrap:anywhere}main{max-width:780px;margin:3rem auto;padding:1.25rem}h1{font-size:1.7rem;line-height:1.6}label{display:block;font-weight:700;margin:1.25rem 0 .4rem}input{width:100%;min-height:48px;font:inherit;padding:.65rem;background:#fffefa;border:1px solid #89978b}button{font:inherit;background:#254d3b;color:white;border:0;padding:.8rem 1.3rem;min-height:48px;margin-top:1.5rem;cursor:pointer}button:disabled{opacity:.6;cursor:wait}a{color:#254d3b}a:focus-visible,input:focus-visible,button:focus-visible{outline:3px solid #9a482b;outline-offset:4px}.notice{background:#fffefa;border:1px solid #c8cec3;padding:1rem}small{color:#5b635d}code{overflow-wrap:anywhere}#status{margin-top:1.5rem;font-weight:700}.success{color:#254d3b}.error{color:#9a482b}</style>
+</head><body><main>
+<p><a href="../index.html">まちかど足利</a> / 運営者用の設定</p>
+<h1>公開URLをまとめて設定する</h1>
+<p>GitHubのアカウント名・リポジトリ名が初期設定と異なる場合、または独自ドメインへ移す場合に使います。</p>
+<div class="notice">初期設定は <code>https://koki-mino.github.io/machikado-ashikaga/</code> です。同じURLで公開する場合、変更は不要です。このページはサイトのメニューには表示されません。</div>
+<form id="settings-form">
+<label for="folder">1. 展開済みのサイトフォルダーを選ぶ</label>
+<input type="file" id="folder" webkitdirectory multiple required>
+<small>index.html、data、assetsなどが入った「machikado-ashikaga」フォルダーを選びます。WindowsのChromeまたはEdgeでの操作をおすすめします。</small>
+<label for="site-url">2. 公開URLを入力する</label>
+<input type="url" id="site-url" placeholder="https://あなたのアカウント名.github.io/machikado-ashikaga/" value="https://koki-mino.github.io/machikado-ashikaga/" required autocomplete="off">
+<small>Settings → Pagesに表示されるホームページのURLです。index.htmlや検索条件は付けません。</small>
+<button type="submit" id="save">3. 設定済みファイルをダウンロード</button>
+</form>
+<p id="status" role="status" aria-live="polite"></p>
+<p>ダウンロードしたZIPを展開し、中のファイルを元のサイトフォルダーへ<strong>上書きコピー</strong>してください。その後、GitHubへアップロードします。</p>
+<p><small>選んだファイルを外部へ送信しません。URLの書き換えとZIPの作成は、このブラウザー内で行います。記事データと写真は変更しません。</small></p>
+<script>
+(() => {
+  'use strict';
+  const form = document.getElementById('settings-form');
+  const status = document.getElementById('status');
+  const button = document.getElementById('save');
+  const encoder = new TextEncoder();
+  const table = Array.from({length:256}, (_, n) => {
+    for (let k = 0; k < 8; k++) n = (n & 1) ? 0xedb88320 ^ (n >>> 1) : n >>> 1;
+    return n >>> 0;
+  });
+  function crc32(bytes) {
+    let value = 0xffffffff;
+    for (const byte of bytes) value = table[(value ^ byte) & 255] ^ (value >>> 8);
+    return (value ^ 0xffffffff) >>> 0;
+  }
+  // 外部ZIPライブラリ不要の、非圧縮ZIPを生成します。
+  function makeZip(files) {
+    const body = [], central = [];
+    let offset = 0, centralSize = 0;
+    for (const [name, text] of files) {
+      const filename = encoder.encode(name), data = encoder.encode(text), crc = crc32(data);
+      const local = new Uint8Array(30 + filename.length), view = new DataView(local.buffer);
+      view.setUint32(0, 0x04034b50, true); view.setUint16(4, 20, true);
+      view.setUint16(12, 0x0021, true);
+      view.setUint32(14, crc, true); view.setUint32(18, data.length, true); view.setUint32(22, data.length, true);
+      view.setUint16(26, filename.length, true); local.set(filename, 30);
+      body.push(local, data);
+      const header = new Uint8Array(46 + filename.length), c = new DataView(header.buffer);
+      c.setUint32(0, 0x02014b50, true); c.setUint16(4, 20, true); c.setUint16(6, 20, true);
+      c.setUint16(14, 0x0021, true);
+      c.setUint32(16, crc, true); c.setUint32(20, data.length, true); c.setUint32(24, data.length, true);
+      c.setUint16(28, filename.length, true); c.setUint32(42, offset, true); header.set(filename, 46);
+      central.push(header); centralSize += header.length; offset += local.length + data.length;
+    }
+    const end = new Uint8Array(22), e = new DataView(end.buffer);
+    e.setUint32(0, 0x06054b50, true); e.setUint16(8, files.length, true); e.setUint16(10, files.length, true);
+    e.setUint32(12, centralSize, true); e.setUint32(16, offset, true);
+    return new Blob([...body, ...central, end], {type:'application/zip'});
+  }
+  form.addEventListener('submit', async event => {
+    event.preventDefault(); button.disabled = true; status.className = ''; status.textContent = '設定ファイルを作成しています。';
+    try {
+      const url = new URL(document.getElementById('site-url').value.trim());
+      if (url.protocol !== 'https:' || url.username || url.password || url.search || url.hash || /\.[a-z\d]+$/i.test(url.pathname)) throw new Error('https://で始まる、ホームページのURLを入力してください。末尾にindex.htmlや検索条件は付けません。');
+      if (!url.pathname.endsWith('/')) url.pathname += '/';
+      const base = url.href;
+      const selected = Array.from(document.getElementById('folder').files);
+      const candidates = selected.filter(file => /\/index\.html$/.test(file.webkitRelativePath));
+      candidates.sort((a, b) => a.webkitRelativePath.length - b.webkitRelativePath.length);
+      if (!candidates.length) throw new Error('index.htmlが入ったサイトフォルダーを選んでください。');
+      const prefix = candidates[0].webkitRelativePath.slice(0, -'index.html'.length);
+      const map = new Map(selected.map(file => [file.webkitRelativePath.slice(prefix.length), file]));
+      const paths = ['index.html', 'archive.html', 'about.html', '404.html', 'data/site-config.js'];
+      for (const path of paths) if (!map.has(path)) throw new Error(path + 'が見つかりません。完成コードのフォルダー全体を選んでください。');
+      const config = await map.get('data/site-config.js').text();
+      const match = config.match(/siteUrl\s*:\s*"([^"]+)"/);
+      if (!match) throw new Error('site-config.jsの公開URLを確認できませんでした。READMEをご確認ください。');
+      const old = match[1];
+      const files = [];
+      for (const path of paths) files.push([path, (await map.get(path).text()).split(old).join(base)]);
+      const escapeXML = text => text.replaceAll('&','&amp;').replaceAll('<','&lt;').replaceAll('>','&gt;');
+      files.push(['sitemap.xml','<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n' + ['', 'archive.html', 'about.html'].map(path => '  <url><loc>'+escapeXML(base+path)+'</loc></url>\n').join('') + '</urlset>\n']);
+      files.push(['robots.txt','User-agent: *\nAllow: /\n\nSitemap: '+base+'sitemap.xml\n']);
+      const blobURL = URL.createObjectURL(makeZip(files));
+      const download = document.createElement('a'); download.href = blobURL; download.download = 'machikado-ashikaga-url-settings.zip'; download.click();
+      setTimeout(() => URL.revokeObjectURL(blobURL), 10000);
+      status.className = 'success'; status.textContent = '7ファイルを作成しました。ZIPを展開して、元のフォルダーへ上書きしてください。公開URL：' + base;
+    } catch (error) { status.className = 'error'; status.textContent = error.message; }
+    finally { button.disabled = false; }
+  });
+})();
+</script></main></body></html>
